@@ -1,7 +1,10 @@
 <?php
 
 if(!class_exists("ZurmoAPI"))
-    require_once("src/Zurmo/ZurmoAPI.class.php");
+    require_once("src/Zurmo/ZurmoAPI.php");
+
+if(!class_exists("GFCheck"))
+    require_once("src/GravityForms/GFCheck.php");
 
 /*
 Plugin Name: Gravity Forms Zurmo Add-On
@@ -32,12 +35,12 @@ add_action('init',  array('GFZurmo', 'init'));
 
 class GFZurmo {
 
-	private static $name 	= "Gravity Forms Zurmo Add-On";
-	private static $path 	= "gravity-forms-zurmo/zurmo.php";
-	private static $url 	= "http://www.gravityforms.com";
-	private static $slug 	= "gravity-forms-zurmo";
-	private static $version = "0.1.0";
-	private static $min_gravityforms_version = "1.3.9";
+	public static $name        = "Gravity Forms Zurmo Add-On";
+	public static $path        = "gravity-forms-zurmo/zurmo.php";
+	public static $url 	       = "http://www.gravityforms.com";
+	public static $slug        = "gravity-forms-zurmo";
+	public static $version     = "0.1.0";
+	public static $min_gravityforms_version = "1.3.9";
 
     /**
      * Iniatilize!
@@ -52,120 +55,25 @@ class GFZurmo {
 
 	    if($pagenow === 'plugins.php') 
 	    {
-			add_action("admin_notices", array('GFZurmo', 'is_gravity_forms_installed'), 10);
+			add_action("admin_notices", array('GFCheck', 'install'), 10);
 		}
 
-		if(self::is_gravity_forms_installed(false, false) !== 1)
+		if(GFCheck::install(false, false) !== 1)
 		{
-			add_action('after_plugin_row_' . self::$path, array('GFZurmo', 'plugin_row') );
+			add_action('after_plugin_row_' . self::$path, array('GFCheck', 'plugin') );
            	return;
         }
 
         if(is_admin())
         {
             //creates a new Settings page on Gravity Forms' settings screen
-            if(self::has_access("gravityforms_zurmo"))
+            if(GFCheck::access("gravityforms_zurmo"))
             {
             	RGForms::add_settings_page("Zurmo", array("GFZurmo", "settings_page"), "");
             }
         }
     }
 
-
-    /**
-     * Check If Gravity Forms Is Installed
-     *
-     * @var $installed - an integer that describes if Gravity Forms is installed and to what degree
-     * @var $message - return a message that can inform the end user
-     */
-    public static function is_gravity_forms_installed($asd = '', $echo = true) 
-    {
-		global $pagenow, $page; $message = '';
-
-		$installed = 0;
-		$name = self::$name;
-
-		if(!class_exists('RGForms')) 
-		{
-
-			if(file_exists(WP_PLUGIN_DIR.'/gravityforms/gravityforms.php')) 
-			{
-				/**
-				 * Gravity Forms Is Inactive
-				 *
-				 * @var $installed = 2
-				 */
-				$installed = 2;
-				$message .= __(sprintf('%sGravity Forms is installed but not active. %sActivate Gravity Forms%s to use the %s plugin.%s', '<p>', '<strong><a href="'.wp_nonce_url(admin_url('plugins.php?action=activate&plugin=gravityforms/gravityforms.php'), 'activate-plugin_gravityforms/gravityforms.php').'">', '</a></strong>', $name,'</p>'), 'gravity-forms-highrise');
-			} 
-			else 
-			{
-				/**
-				 * Gravity Forms Is Not Installed
-				 *
-				 * @var $installed = 0
-				 */
-				$installed = 0;
-				$message .= 'You do not have the Gravity Forms plugin installed';
-			}
-
-			/**
-			 * Deliver Message
-			 *
-			 * @var $message depending on if $install = 0 or 2
-			 */
-			if(!empty($message) && $echo) 
-			{
-				echo '<div id="message" class="updated">'.$message.'</div>';
-			}
-
-		} 
-		else 
-		{
-			/**
-			 * Gravity Forms Is Installed
-			 *
-			 * @var $installed = 1
-			 */
-			$installed = 1;
-		}
-
-		return $installed;
-	}
-
-
-    /**
-     * Is Gravity Forms Supported?
-     */
-	public static function plugin_row()
-    {
-
-        if( !self::is_gravityforms_supported() )
-        {
-            $message = sprintf( __("%sGravity Forms%s is required. %sPurchase it today!%s") );
-            self::display_plugin_message($message, true);
-        }
-
-    }
-
-    /**
-     * Has Access
-     *
-     * limit access to plugin except for administrative users
-     * 
-     * @var $required_permission
-     */
-	protected static function has_access($required_permission)
-	{
-        $has_members_plugin = function_exists('members_get_capabilities');
-
-        $has_access = $has_members_plugin ? current_user_can($required_permission) : current_user_can("level_7");
-
-        if($has_access)
-            return $has_members_plugin ? $required_permission : "level_7";
-        else
-            return false;
-    }
 
 
     /**
@@ -177,7 +85,7 @@ class GFZurmo {
     {
 
         // Adding submenu if user has access
-		$permission = self::has_access("gravityforms_zurmo");
+		$permission = GFCheck::access("gravityforms_zurmo");
 
 		if(!empty($permission)) {
 
@@ -229,6 +137,8 @@ class GFZurmo {
      * API
      *
      * load all meta fields for Zurmo install
+     *
+     * @var ZurmoAPI dependency injection, pass the whole object in
      */
     private static function get_api(ZurmoApi $zurmo)
     {
@@ -244,5 +154,19 @@ class GFZurmo {
         }
 
         return $api;
+    }
+
+
+    //Returns the url of the plugin's root folder
+    protected function get_base_url()
+    {
+        return plugins_url(null, __FILE__);
+    }
+
+    //Returns the physical path of the plugin's root folder
+    protected function get_base_path()
+    {
+        $folder = basename(dirname(__FILE__));
+        return WP_PLUGIN_DIR . "/" . $folder;
     }
 }

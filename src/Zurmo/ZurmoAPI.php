@@ -1,5 +1,5 @@
 <?php //namespace Zurmo;
-include('APIRestHelper.class.php');
+include('APIRestHelper.php');
 
 class ZurmoAPI
 {   

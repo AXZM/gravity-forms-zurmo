@@ -1,6 +1,6 @@
 <?php
 if(!class_exists("ZurmoAPI"))
-    require_once("../src/Zurmo/ZurmoAPI.class.php");
+    require_once("../src/Zurmo/ZurmoAPI.php");
     
     $message = $validimage = false;        
 
