@@ -1,6 +1,6 @@
 <?php
 /**
- * Fired when the plugin is uninstalled.
+ * Form Interface
  *
  * @package   Gravityforms / Zurmo Addon
  * @author    Ross Edman / Tyler Ferguson <info@axzm.com>
@@ -9,9 +9,6 @@
  * @copyright 2013 AXZM
  */
 
-// If uninstall, not called from WordPress, then exit
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-	exit;
+interface Form {
+	public function submit();
 }
-
-// TODO: Define uninstall functionality here
