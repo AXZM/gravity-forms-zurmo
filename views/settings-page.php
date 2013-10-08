@@ -48,7 +48,7 @@
     }
 
     $zurmo = new API\Connect;
-    $api = self::get_api($zurmo);
+    $api = self::api($zurmo);
 
     if($api)
     {
@@ -62,7 +62,7 @@
 		else 
 		{
 			$class = "error";
-            $message = "<p>Invalid stuff.</p>";
+            $message = "<p>Invalid credentials.</p>";
 			$valid = false;
 			$validimage = '<img src="'.GFCommon::get_base_url().'/images/cross.png"/>';
 		}

@@ -58,19 +58,19 @@ class GFZurmo {
 
 	    if($pagenow === 'plugins.php') 
 	    {
-			add_action("admin_notices", array('\Zurmo\GravityForms\Check', 'install'), 10);
+			add_action("admin_notices", array('GravityForms\Check', 'install'), 10);
 		}
 
-		if( \Zurmo\GravityForms\Check::install(false, false) !== 1 )
+		if( GravityForms\Check::install(false, false) !== 1 )
 		{
-			add_action('after_plugin_row_' . self::$path, array('\Zurmo\GravityForms\Check', 'plugin') );
+			add_action('after_plugin_row_' . self::$path, array('GravityForms\Check', 'plugin') );
            	return;
         }
 
         if(is_admin())
         {
             //creates a new Settings page on Gravity Forms' settings screen
-            if( \Zurmo\GravityForms\Check::access("gravityforms_zurmo") )
+            if( GravityForms\Check::access("gravityforms_zurmo") )
             {
             	RGForms::add_settings_page("Zurmo", array("GFZurmo", "settings_page"), "");
             }
@@ -88,7 +88,7 @@ class GFZurmo {
     {
 
         // Adding submenu if user has access
-		$permission = \Zurmo\GravityForms\Check::access("gravityforms_zurmo");
+		$permission = GravityForms\Check::access("gravityforms_zurmo");
 
 		if(!empty($permission)) {
 
@@ -143,7 +143,7 @@ class GFZurmo {
      *
      * @var ZurmoAPI dependency injection, pass the whole object in
      */
-    private static function get_api( API\Connect $zurmo )
+    private static function api( API\Connect $zurmo )
     {
         $api = false;
 
