@@ -28,10 +28,10 @@ add_action('init',  array('GFZurmo', 'init'));
 
 class GFZurmo {
 
-	private static $name = "Gravity Forms Zurmo Add-On";
-	private static $path = "gravity-forms-zurmo/zurmo.php";
-	private static $url = "http://www.gravityforms.com";
-	private static $slug = "gravity-forms-zurmo";
+	private static $name 	= "Gravity Forms Zurmo Add-On";
+	private static $path 	= "gravity-forms-zurmo/zurmo.php";
+	private static $url 	= "http://www.gravityforms.com";
+	private static $slug 	= "gravity-forms-zurmo";
 	private static $version = "0.1.0";
 	private static $min_gravityforms_version = "1.3.9";
 
@@ -67,9 +67,6 @@ class GFZurmo {
             }
         }
 
-        //creates the subnav left menu
-        add_filter("gform_addon_navigation", array('GFZurmo', 'create_menu'), 20);
-
         if(self::is_zurmo_page())
         {
             //enqueueing sack for AJAX requests
@@ -79,12 +76,12 @@ class GFZurmo {
         else if(in_array(RG_CURRENT_PAGE, array("admin-ajax.php")))
         {
             add_action('wp_ajax_rg_update_feed_active', array('GFZurmo', 'update_feed_active'));
-            add_action('wp_ajax_gf_select_highrise_form', array('GFZurmo', 'select_highrise_form'));
+            add_action('wp_ajax_gf_select_zurmo_form', array('GFZurmo', 'select_zurmo_form'));
 
         } 
         elseif(in_array(RG_CURRENT_PAGE, array('admin.php'))) 
         {
-        	add_action('admin_head', array('GFZurmo', 'show_highrise_status'));
+        	add_action('admin_head', array('GFZurmo', 'show_zurmo_status'));
         }
         else
         {
@@ -98,7 +95,7 @@ class GFZurmo {
 
 		add_filter("gform_confirmation", array('GFZurmo', 'confirmation_error'));
 
-		add_action('gform_entry_info', array('GFZurmo', 'entry_info_link_to_highrise'), 10, 2);
+		add_action('gform_entry_info', array('GFZurmo', 'entry_info_link_to_zurmo'), 10, 2);
     }
 
 
@@ -163,6 +160,7 @@ class GFZurmo {
 		return $installed;
 	}
 
+
     /**
      * Is Gravity Forms Supported?
      */
@@ -175,6 +173,7 @@ class GFZurmo {
         }
 
     }
+
 
     //Returns true if the current page is an Feed pages. Returns false if not
     private static function is_zurmo_page()
@@ -190,17 +189,74 @@ class GFZurmo {
         return in_array($current_page, $zurmo_pages);
     }
 
+
     /**
      * Has Access
+     *
+     * limit access to plugin except for administrative users
+     * 
+     * @var $required_permission
      */
 	protected static function has_access($required_permission)
 	{
         $has_members_plugin = function_exists('members_get_capabilities');
+
         $has_access = $has_members_plugin ? current_user_can($required_permission) : current_user_can("level_7");
+
         if($has_access)
             return $has_members_plugin ? $required_permission : "level_7";
         else
             return false;
+    }
+
+
+    /**
+     * Create Side Menu Under Forms
+     *
+     * adds menu to `Forms` drop down so settings can be accessed
+     */
+    public static function create_menu($menus){
+
+        // Adding submenu if user has access
+		$permission = self::has_access("gravityforms_zurmo");
+
+		if(!empty($permission)) {
+
+			$menus[] = array(
+				"name" => "gf_zurmo", 
+				"label" => __("Zurmo", "gravityformszurmo"), 
+				"callback" =>  array("GFZurmo", "zurmo_page"), 
+				"permission" => $permission
+			);
+
+		}
+
+	    return $menus;
+    }
+
+
+    /**
+     * Create Side Menu Under Forms
+     *
+     * adds menu to `Forms` drop down so settings can be accessed
+     */
+    public static function zurmo_page(){
+
+        if(isset($_GET["view"]) && $_GET["view"] == "edit") 
+        {
+            self::edit_page($_GET["id"]);
+        } 
+        else 
+        {
+			self::settings_page();
+		}
+
+    }
+
+    public static function settings_page()
+    {
+		$message = $validimage = false;
+        include_once('views/settings-page.php');
     }
 
 }
