@@ -1,5 +1,5 @@
 <?php //namespace Zurmo;
-include('APIRestHelper.php');
+include('APIRestHelper.class.php');
 
 class ZurmoAPI
 {   
@@ -17,7 +17,7 @@ class ZurmoAPI
     | Construct Function
     |------------------------------------
     */
-        public function __construct($url, $username, $password)
+        public function setup($url, $username, $password)
         {   
             /*
             |-------------------------------------
@@ -69,6 +69,7 @@ class ZurmoAPI
                 return $response;
             }
         }
+
     /*
     |------------------------------------
     | New Lead Function

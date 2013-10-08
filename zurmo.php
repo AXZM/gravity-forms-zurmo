@@ -1,4 +1,8 @@
 <?php
+
+if(!class_exists("ZurmoAPI"))
+    require_once("src/Zurmo/ZurmoAPI.class.php");
+
 /*
 Plugin Name: Gravity Forms Zurmo Add-On
 Description: Integrates Gravity Forms with Zurmo allowing form submissions to be automatically sent to your Zurmo account
@@ -35,7 +39,6 @@ class GFZurmo {
 	private static $version = "0.1.0";
 	private static $min_gravityforms_version = "1.3.9";
 
-
     /**
      * Iniatilize!
      *
@@ -66,36 +69,6 @@ class GFZurmo {
             	RGForms::add_settings_page("Zurmo", array("GFZurmo", "settings_page"), "");
             }
         }
-
-        if(self::is_zurmo_page())
-        {
-            //enqueueing sack for AJAX requests
-            wp_enqueue_script(array("sack", "jquery-ui-tooltip"));
-            wp_enqueue_style('gravityforms-admin', GFCommon::get_base_url().'/css/admin.css');
-        }
-        else if(in_array(RG_CURRENT_PAGE, array("admin-ajax.php")))
-        {
-            add_action('wp_ajax_rg_update_feed_active', array('GFZurmo', 'update_feed_active'));
-            add_action('wp_ajax_gf_select_zurmo_form', array('GFZurmo', 'select_zurmo_form'));
-
-        } 
-        elseif(in_array(RG_CURRENT_PAGE, array('admin.php'))) 
-        {
-        	add_action('admin_head', array('GFZurmo', 'show_zurmo_status'));
-        }
-        else
-        {
-            //handling post submission.
-            add_action("gform_entry_created", array('GFZurmo', 'push'), 10, 2);
-        }
-
-        add_action("gform_properties_settings", array('GFZurmo', 'add_form_option_js'), 800);
-
-		add_filter('gform_tooltips', array('GFZurmo', 'add_form_option_tooltip'));
-
-		add_filter("gform_confirmation", array('GFZurmo', 'confirmation_error'));
-
-		add_action('gform_entry_info', array('GFZurmo', 'entry_info_link_to_zurmo'), 10, 2);
     }
 
 
@@ -164,31 +137,16 @@ class GFZurmo {
     /**
      * Is Gravity Forms Supported?
      */
-	public static function plugin_row(){
+	public static function plugin_row()
+    {
 
-        if(!self::is_gravityforms_supported())
+        if( !self::is_gravityforms_supported() )
         {
             $message = sprintf( __("%sGravity Forms%s is required. %sPurchase it today!%s") );
             self::display_plugin_message($message, true);
         }
 
     }
-
-
-    //Returns true if the current page is an Feed pages. Returns false if not
-    private static function is_zurmo_page()
-    {
-    	if(empty($_GET["page"])) 
-    	{
-    		return false; 
-    	}
-
-        $current_page = trim(strtolower($_GET["page"]));
-        $zurmo_pages = array("gf_zurmo");
-
-        return in_array($current_page, $zurmo_pages);
-    }
-
 
     /**
      * Has Access
@@ -215,7 +173,8 @@ class GFZurmo {
      *
      * adds menu to `Forms` drop down so settings can be accessed
      */
-    public static function create_menu($menus){
+    public static function create_menu($menus)
+    {
 
         // Adding submenu if user has access
 		$permission = self::has_access("gravityforms_zurmo");
@@ -240,7 +199,8 @@ class GFZurmo {
      *
      * adds menu to `Forms` drop down so settings can be accessed
      */
-    public static function zurmo_page(){
+    public static function zurmo_page()
+    {
 
         if(isset($_GET["view"]) && $_GET["view"] == "edit") 
         {
@@ -253,10 +213,36 @@ class GFZurmo {
 
     }
 
+
+    /**
+     * Render Settings Page
+     *
+     * load all meta fields for Zurmo install
+     */
     public static function settings_page()
-    {
-		$message = $validimage = false;
+    {   
         include_once('views/settings-page.php');
     }
 
+
+    /**
+     * API
+     *
+     * load all meta fields for Zurmo install
+     */
+    private static function get_api(ZurmoApi $zurmo)
+    {
+        $api = false;
+
+        //global highrise settings
+        $settings = get_option("gf_zurmo_settings");
+
+        if( !empty($settings["url"]) && !empty($settings["password"]) && !empty($settings["username"]) )
+        {
+            $zurmo->setup($settings["url"], $settings["username"], $settings["password"]);
+            $api = $zurmo->login();
+        }
+
+        return $api;
+    }
 }
