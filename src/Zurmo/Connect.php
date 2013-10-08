@@ -1,7 +1,8 @@
-<?php //namespace Zurmo;
-include('APIRestHelper.php');
+<?php namespace Zurmo\API;
 
-class ZurmoAPI
+include('RestHelper.php');
+
+class Connect
 {   
     /*
     |-----------------------------------------------------
@@ -56,7 +57,7 @@ class ZurmoAPI
                 'ZURMO_AUTH_PASSWORD: ' . $this->password,
                 'ZURMO_API_REQUEST_TYPE: REST',
             );
-            $response = ApiRestHelper::createApiCall($this->url.'/app/index.php/zurmo/api/login', 'POST', $headers);
+            $response = RestHelper::call($this->url.'/app/index.php/zurmo/api/login', 'POST', $headers);
             
             $response = json_decode($response, true);
 
@@ -111,7 +112,7 @@ class ZurmoAPI
             | Make API call
             |-------------------------------------
             */
-                $response = ApiRestHelper::createApiCall($this->url.'/app/index.php/leads/contact/api/create/', 'POST', $headers, array('data' => $data));
+                $response = RestHelper::call($this->url.'/app/index.php/leads/contact/api/create/', 'POST', $headers, array('data' => $data));
                 return var_dump($response);
                 // $response = json_decode($response, true);
 
@@ -154,10 +155,12 @@ class ZurmoAPI
                 'ZURMO_TOKEN: ' . $authenticationData['token'],
                 'ZURMO_API_REQUEST_TYPE: REST',
             );
-            $response = ApiRestHelper::createApiCall($this->url.'/app/index.php/contacts/contact/api/read/'.$id, 'GET', $headers);
+            $response = RestHelper::call($this->url.'/app/index.php/contacts/contact/api/read/'.$id, 'GET', $headers);
+
             // Decode json data
             return var_dump($response);
             $response = json_decode($response, true);
+            
             if ($response['status'] == 'SUCCESS')
             {
                 $contactAttributes = $response['data'];
@@ -192,7 +195,7 @@ class ZurmoAPI
                 'ZURMO_TOKEN: ' . $authenticationData['token'],
                 'ZURMO_API_REQUEST_TYPE: REST',
             );
-            $response = ApiRestHelper::createApiCall($this->url.'/app/index.php/contacts/contactState/api/list/', 'GET', $headers);
+            $response = RestHelper::call($this->url.'/app/index.php/contacts/contactState/api/list/', 'GET', $headers);
             // Decode json data
             return var_dump($response);
             $response = json_decode($response, true);

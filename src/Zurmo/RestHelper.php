@@ -1,4 +1,4 @@
-<?php //namespace Zurmo;
+<?php namespace Zurmo\API;
 /**
  * APIRestHelper
  *
@@ -9,9 +9,9 @@
  * @param $data is an array of data to be sent with the request.
  */
 
-class ApiRestHelper
+class RestHelper
 {
-    public static function createApiCall($url, $method, $headers, $data = array())
+    public static function call($url, $method, $headers, $data = array())
     {
         if ($method == 'PUT')
         {

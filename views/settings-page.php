@@ -1,7 +1,14 @@
 <?php
-if(!class_exists("ZurmoAPI"))
-    require_once("../src/Zurmo/ZurmoAPI.php");
     
+    /**
+     * Set Namespaces
+     *
+     * namespacing for the win!
+     */
+    use Zurmo\GravityForms as GravityForms;
+    use Zurmo\API as API;
+
+
     $message = $validimage = false;        
 
     if(!empty($_POST["uninstall"]))
@@ -40,7 +47,7 @@ if(!class_exists("ZurmoAPI"))
 
     }
 
-    $zurmo = new ZurmoAPI;
+    $zurmo = new API\Connect;
     $api = self::get_api($zurmo);
 
     if($api)

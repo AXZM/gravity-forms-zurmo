@@ -1,7 +1,8 @@
-<?php
+<?php namespace Zurmo\GravityForms;
 
 /**
  * Perform basic checks to see if GravityForms is initialized and installed
+ * abstracted into its own class for ease of use and separation of concerns
  *
  * @package   Gravityforms / Zurmo Addon
  * @author    Ross Edman / Tyler Ferguson <info@axzm.com>
@@ -10,7 +11,7 @@
  * @copyright 2013 AXZM
  */
 
-class GFCheck {
+class Check {
 
     /**
      * Check If Gravity Forms Is Installed
@@ -23,7 +24,7 @@ class GFCheck {
 		global $pagenow, $page; $message = '';
 
 		$installed = 0;
-		$name = GFZurmo::$name;
+		$name = \GFZurmo::$name;
 
 		if(!class_exists('RGForms')) 
 		{
@@ -104,7 +105,7 @@ class GFCheck {
     public static function version()
     {
 
-        if(class_exists("GFCommon"))
+        if(class_exists("\GFCommon"))
         {
             $is_correct_version = version_compare(GFCommon::$version, self::$min_gravityforms_version, ">=");
             return $is_correct_version;
