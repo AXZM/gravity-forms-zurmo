@@ -1,15 +1,6 @@
 <?php namespace Zurmo\API;
 
-/**
- * The connecting the class that provides methods to access the Zurmo API
- * from Wordpress.
- *
- * @package   Gravityforms / Zurmo Addon
- * @author    Ross Edman / Tyler Ferguson <info@axzm.com>
- * @license   GPL-2.0+
- * @link      http://axzm.com
- * @copyright 2013 AXZM
- */
+include('RestHelper.php');
 
 class Connect
 {   
@@ -88,7 +79,7 @@ class Connect
     | Creates a new lead in the system
     |
     */  
-        public function new_lead($data)
+        public function newLead($data)
         {
             /*
             |-------------------------------------
@@ -153,7 +144,7 @@ class Connect
         | List all the attributes for a particular contact
         |
         */
-        public function contact_attributes($id)
+        public function contactAttributes($id)
         {
             $authenticationData = $this->login();
             //Add code to check if user is logged successfully
@@ -172,8 +163,8 @@ class Connect
             
             if ($response['status'] == 'SUCCESS')
             {
-                $contact_attributes = $response['data'];
-                return $contact_attributes;
+                $contactAttributes = $response['data'];
+                return $contactAttributes;
                 //Do something with contact attributes
             }
             else
@@ -193,7 +184,7 @@ class Connect
         | List all the available "states" (i.e. status types) for a contact
         |
         */
-        public function contact_states()
+        public function contactStates()
         {
              $authenticationData = $this->login();
             //Add code to check if user is logged successfully
@@ -210,8 +201,8 @@ class Connect
             $response = json_decode($response, true);
             if ($response['status'] == 'SUCCESS')
             {
-                $contact_attributes = $response['data'];
-                return $contact_attributes;
+                $contactAttributes = $response['data'];
+                return $contactAttributes;
                 //Do something with contact attributes
             }
             else

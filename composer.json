@@ -1,0 +1,21 @@
+{
+    "name": "axzm/gravity-forms-zurmo",
+    "description": "Gravity Forms / Zurmo Integration",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "AXZM",
+            "email": "info@axzm.com"
+        }
+    ],
+    "require": {
+
+    },
+    "autoload": {
+        "psr-0": {
+            "GravityForms\\": "src/",
+            "Zurmo\\": "src/",
+            "Helpers\\": "src/"
+        }
+    }
+}

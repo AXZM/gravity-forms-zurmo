@@ -1,40 +1,39 @@
 <?php
+require 'vendor/autoload.php';
 
-if(!class_exists("Connect"))
-    require_once("src/Zurmo/Connect.php");
+/**
+ * Plugin Name: Gravity Forms Zurmo Add-On
+ * Description: Integrates Gravity Forms with Zurmo allowing form submissions to be automatically sent to your Zurmo account
+ * Version: 0.1.0
+ * Author: AXZM
+ * Author URI: http://www.axzm.com
+ *
+ * @package   Gravityforms / Zurmo Addon
+ * @author    Ross Edman / Tyler Ferguson <info@axzm.com>
+ * @license   GPL-2.0+
+ * @link      http://axzm.com
+ * @copyright 2013 AXZM
+ *
+ * ------------------------------------------------------------------------
+ * Copyright 2013 AXZM
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ */
 
-if(!class_exists("Check"))
-    require_once("src/GravityForms/Check.php");
-
-use Zurmo\GravityForms as GravityForms;
 use Zurmo\API as API;
-
-/*
-Plugin Name: Gravity Forms Zurmo Add-On
-Description: Integrates Gravity Forms with Zurmo allowing form submissions to be automatically sent to your Zurmo account
-Version: 0.1.0
-Author: AXZM
-Author URI: http://www.axzm.com
-
-------------------------------------------------------------------------
-Copyright 2013 AXZM
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
-*/
-
-add_action('init',  array('GFZurmo', 'init'));
+use Helpers\ErrorHandler as Error;
 
 class GFZurmo {
 
@@ -72,36 +71,16 @@ class GFZurmo {
             //creates a new Settings page on Gravity Forms' settings screen
             if( GravityForms\Check::access("gravityforms_zurmo") )
             {
-            	RGForms::add_settings_page("Zurmo", array("GFZurmo", "settings_page"), "");
+            	RGForms::add_settings_page("Zurmo", array("GravityForms\Views", "settings"), "");
             }
         }
-    }
 
-
-
-    /**
-     * Create Side Menu Under Forms
-     *
-     * adds menu to `Forms` drop down so settings can be accessed
-     */
-    public static function create_menu($menus)
-    {
-
-        // Adding submenu if user has access
-		$permission = GravityForms\Check::access("gravityforms_zurmo");
-
-		if(!empty($permission)) {
-
-			$menus[] = array(
-				"name" => "gf_zurmo", 
-				"label" => __("Zurmo", "gravityformszurmo"), 
-				"callback" =>  array("GFZurmo", "zurmo_page"), 
-				"permission" => $permission
-			);
-
-		}
-
-	    return $menus;
+        /**
+         * Action Form Option
+         *
+         * add checkbox into form settings
+         */
+        add_action("gform_properties_settings", array('GravityForms\Views', 'checkbox'), 800);
     }
 
 
@@ -126,24 +105,13 @@ class GFZurmo {
 
 
     /**
-     * Render Settings Page
-     *
-     * load all meta fields for Zurmo install
-     */
-    public static function settings_page()
-    {   
-        include_once('views/settings-page.php');
-    }
-
-
-    /**
      * API
      *
      * load all meta fields for Zurmo install
      *
      * @var ZurmoAPI dependency injection, pass the whole object in
      */
-    private static function api( API\Connect $zurmo )
+    public static function api( API\Connect $zurmo )
     {
         $api = false;
 
@@ -159,17 +127,11 @@ class GFZurmo {
         return $api;
     }
 
-
-    //Returns the url of the plugin's root folder
-    protected function get_base_url()
-    {
-        return plugins_url(null, __FILE__);
-    }
-
-    //Returns the physical path of the plugin's root folder
-    protected function get_base_path()
-    {
-        $folder = basename(dirname(__FILE__));
-        return WP_PLUGIN_DIR . "/" . $folder;
-    }
 }
+
+/**
+ * Link It Up
+ *
+ * hook into the Wordpress init
+ */
+add_action('init',  array('GFZurmo', 'init'));

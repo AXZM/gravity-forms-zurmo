@@ -1,4 +1,4 @@
-<?php namespace Zurmo\GravityForms;
+<?php namespace GravityForms;
 
 /**
  * Perform basic checks to see if GravityForms is initialized and installed
@@ -127,8 +127,8 @@ class Check {
 
         if( !self::version() )
         {
-            $message = sprintf( __("%sGravity Forms%s is required.%s") );
-            self::display_plugin_message($message, true);
+            $message = sprintf( __("Gravity Form is required.") );
+            //self::display_plugin_message($message, true);
         }
 
     }

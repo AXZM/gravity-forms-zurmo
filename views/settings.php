@@ -47,8 +47,8 @@
 
     }
 
-    $zurmo = new API\Connect;
-    $api = self::api($zurmo);
+    $zurmo = new Zurmo\API\Connect;
+    $api = GFZurmo::api($zurmo);
 
     if($api)
     {
