@@ -31,7 +31,6 @@ class Views {
      */
     public static function checkbox() 
     {
-
         // clean contents
         ob_start();
             gform_tooltip("form_zurmo");
@@ -46,7 +45,11 @@ class Views {
     } 
 
 
-    //Returns the physical path of the plugin's root folder
+    /**
+     * Views Directory Path
+     *
+     * @return the directory path to the views folder
+     */
     protected static function views_path()
     {
         $folder = dirname(dirname(dirname(__FILE__) . '/'));

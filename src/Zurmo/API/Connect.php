@@ -79,19 +79,19 @@ class Connect
     | Creates a new lead in the system
     |
     */  
-        public function newLead($data)
+        public function new_lead($data)
         {
             /*
             |-------------------------------------
             | Login to API
             |-------------------------------------
             */
-               $authenticationData = $this->login();
+               $auth_data = $this->login();
               
                 //Add code to check if user is logged successfully
-               if(!array_key_exists('sessionId', $authenticationData))
+               if(!array_key_exists('sessionId', $auth_data))
                {
-                    return var_dump($authenticationData);
+                    return var_dump($auth_data);
                     
                }
                
@@ -102,8 +102,8 @@ class Connect
             */
                 $headers = array(
                     'Accept: application/json',
-                    'ZURMO_SESSION_ID: ' . $authenticationData['sessionId'],
-                    'ZURMO_TOKEN: ' . $authenticationData['token'],
+                    'ZURMO_SESSION_ID: ' . $auth_data['sessionId'],
+                    'ZURMO_TOKEN: ' . $auth_data['token'],
                     'ZURMO_API_REQUEST_TYPE: REST',
                 );
             
@@ -136,81 +136,4 @@ class Connect
                 }
         }
 
-        /*
-        |---------------------------------------
-        | Contact Attributes
-        |---------------------------------------
-        |   
-        | List all the attributes for a particular contact
-        |
-        */
-        public function contactAttributes($id)
-        {
-            $authenticationData = $this->login();
-            //Add code to check if user is logged successfully
-
-            $headers = array(
-                'Accept: application/json',
-                'ZURMO_SESSION_ID: ' . $authenticationData['sessionId'],
-                'ZURMO_TOKEN: ' . $authenticationData['token'],
-                'ZURMO_API_REQUEST_TYPE: REST',
-            );
-            $response = RestHelper::call($this->url.'/app/index.php/contacts/contact/api/read/'.$id, 'GET', $headers);
-
-            // Decode json data
-            return var_dump($response);
-            $response = json_decode($response, true);
-            
-            if ($response['status'] == 'SUCCESS')
-            {
-                $contactAttributes = $response['data'];
-                return $contactAttributes;
-                //Do something with contact attributes
-            }
-            else
-            {
-                // Error
-                $errors = $response['errors'];
-                return $errors;
-                // Do something with errors
-            }
-        }
-
-        /*
-        |-------------------------------------------------------------------
-        | Contact States
-        |-------------------------------------------------------------------
-        |   
-        | List all the available "states" (i.e. status types) for a contact
-        |
-        */
-        public function contactStates()
-        {
-             $authenticationData = $this->login();
-            //Add code to check if user is logged successfully
-
-            $headers = array(
-                'Accept: application/json',
-                'ZURMO_SESSION_ID: ' . $authenticationData['sessionId'],
-                'ZURMO_TOKEN: ' . $authenticationData['token'],
-                'ZURMO_API_REQUEST_TYPE: REST',
-            );
-            $response = RestHelper::call($this->url.'/app/index.php/contacts/contactState/api/list/', 'GET', $headers);
-            // Decode json data
-            return var_dump($response);
-            $response = json_decode($response, true);
-            if ($response['status'] == 'SUCCESS')
-            {
-                $contactAttributes = $response['data'];
-                return $contactAttributes;
-                //Do something with contact attributes
-            }
-            else
-            {
-                // Error
-                $errors = $response['errors'];
-                return $errors;
-                // Do something with errors
-            }
-        }
 }

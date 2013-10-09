@@ -25,16 +25,16 @@
         }
 
         if($().prop) {
-            $("#gform_enable_zurmo").prop("checked", form.enablezurmo ? true : false);
+            $("#gform_enable_zurmo").prop("checked", form.enableZurmo ? true : false);
         } else {
-            $("#gform_enable_zurmo").attr("checked", form.enablezurmo ? true : false);
+            $("#gform_enable_zurmo").attr("checked", form.enableZurmo ? true : false);
         }
 
         $("#gform_enable_zurmo").live('click change ready', function() {
 
             var checked = $(this).is(":checked")
 
-            form.enablezurmo = checked;
+            form.enableZurmo = checked;
 
             if(checked) {
                 $("#gform_title").append('<span class="zurmo" title="<?php _e("zurmo integration is enabled.", "gravity-forms-zurmo") ?>"></span>');
