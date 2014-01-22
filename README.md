@@ -5,7 +5,7 @@ A plugin for Wordpress that integrates Gravity Forms and Zurmo. It allows a user
 ## Installation
 
 - Download or clone this repo into your Wordpress plugins folder
-- Activate the `Gravity Forms Zurmo` Plugin
+- Activate the `Gravity Forms Zurmo Add-On` Plugin
 - Navigate to the `Forms` menu in Wordpress
 - From the `Forms` tab select `Settings` and then `Zurmo`
 - Enter you Zurmo URL, Username and Password, if all works you will receive a confirmation message

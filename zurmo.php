@@ -4,7 +4,7 @@ require 'vendor/autoload.php';
 /**
  * Plugin Name: Gravity Forms Zurmo Add-On
  * Description: Integrates Gravity Forms with Zurmo allowing form submissions to be automatically sent to your Zurmo account
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: AXZM
  * Author URI: http://www.axzm.com
  *

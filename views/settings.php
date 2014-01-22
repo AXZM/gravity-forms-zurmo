@@ -103,7 +103,7 @@
                     </th>
                     <td>
                         <input type="text" size="75" id="gf_zurmo_url" name="gf_zurmo_url" value="<?php echo esc_attr($settings["url"]) ?>"/> 
-                        <?php echo $validimage; ?> <br/> Your Zurmo URL, e.g. http://crm.yoururl.com
+                        <?php echo $validimage; ?> <br/> Your Zurmo URL, e.g. <strong style="color: red;">https</strong>://crm.yoururl.com (Make sure you us <strong>https://</strong>)
                     </td>
                 </tr>
                 <tr>
