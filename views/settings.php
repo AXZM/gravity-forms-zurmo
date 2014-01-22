@@ -5,7 +5,7 @@
      *
      * namespacing for the win!
      */
-    use Zurmo\GravityForms as GravityForms;
+    //use Zurmo\GravityForms as GravityForms;
     use Zurmo\API as API;
 
 
@@ -131,10 +131,13 @@
             </table>
         </form>
 
-<?php if($valid) { ?>
+<?php if($valid) { 
+  		?>
+<!--
     
     <h2>Extra Settings Here</h2>
     <p>Whatever</p>
+-->
 
 <?php } // end if($api) ?>
     </div>

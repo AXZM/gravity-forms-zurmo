@@ -54,4 +54,5 @@ class Push {
 			$this->form_status = true;
 		}
 	}
+	
 }

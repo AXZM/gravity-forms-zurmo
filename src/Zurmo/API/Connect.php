@@ -76,7 +76,19 @@ class Connect
     | New Lead Function
     |------------------------------------
     |   
-    | Creates a new lead in the system
+    | Creates a new lead in the system. Requires a data array with possible fields:
+    | firstName
+    | lastName
+    | primaryEmail => Array(emailAddress, optOut)
+    | description
+    | mobilePhone
+    | officePhone
+    | department
+    | jobTitle
+    | companyName
+    | website
+    | state => array(id)
+    | 
     |
     */  
         public function new_lead($data)

@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Zurmo\\' => array($baseDir . '/src'),
-    'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'Helpers\\' => array($baseDir . '/src'),
     'GravityForms\\' => array($baseDir . '/src'),
 );
